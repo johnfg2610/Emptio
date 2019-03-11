@@ -24,12 +24,16 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> Get([FromRoute]Guid id)
         {
             if (id == Guid.Empty)
+            {
                 return BadRequest();
+            }
 
             var product = await productDatabase.GetSingleAsync(it => it.Id == id);
 
             if (product == null)
+            {
                 return NotFound();
+            }
 
             return Ok(product);
         }
@@ -38,12 +42,16 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> GetList([FromRoute]Guid id)
         {
             if (id == Guid.Empty)
+            {
                 return BadRequest();
+            }
 
             var product = await productDatabase.GetListAsync(it => it.Id == id);
 
             if (product == null)
+            {
                 return NotFound();
+            }
 
             return Ok(product);
         }
@@ -52,7 +60,9 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> Post([FromBody]ProductModel productModel)
         {
             if (productModel == null)
+            {
                 return BadRequest();
+            }
 
             var id = await productDatabase.CreateAsync(productModel);
 
@@ -63,7 +73,9 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]ProductModel productModel)
         {
             if (productModel == null)
+            {
                 return BadRequest();
+            }
 
             await productDatabase.UpdateAsync(it => it.Id == id, productModel);
 
@@ -74,7 +86,9 @@ namespace Catalog.API.Controllers
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
+            {
                 return BadRequest();
+            }
 
             await productDatabase.DeleteAsync(it => it.Id == id);
 

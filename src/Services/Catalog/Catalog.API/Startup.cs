@@ -32,11 +32,12 @@ namespace Catalog.API
         {
             services.AddSingleton<IdGenerator>(it => new DefaultIdGenerator());
             //todo add IMongoClient
-            services.AddSingleton(it => new MongoClientSettings() {
-                Server = new MongoServerAddress("192.168.0.19", 27017)
+            services.AddSingleton(it => new MongoClientSettings{
+                Server = new MongoServerAddress(Configuration.GetSection("MongoURL").Get<string>(), 27017)
             });
 
-            services.AddSingleton<IMongoClient>(it => new MongoClient(it.GetService<MongoClientSettings>()));
+            services.AddSingleton<IMongoClient>(
+                it => new MongoClient(it.GetService<MongoClientSettings>()));
 
             services.AddScoped<IMongoDatabase>(it => it.GetService<IMongoClient>().GetDatabase("CatalogApi"));
 
