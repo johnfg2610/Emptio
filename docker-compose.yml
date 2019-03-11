@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  mongo.data:
+    image: mongo
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: src/Services/Catalog/Catalog.API/Dockerfile
+
+  cart.api:
+    image: ${DOCKER_REGISTRY-}cartapi
+    build:
+      context: .
+      dockerfile: src/Services/Cart/Cart.API/Dockerfile
+

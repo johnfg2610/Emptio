@@ -1,0 +1,10 @@
+version: 3
+services:
+  mongo.db:
+    image: mongo
+  catalog.api:
+    build: ./src/services/catalog/catalog.api
+    enviorment:
+      - MongoUrl=http://mongo.db
+    ports: 
+      - "80:8080"
