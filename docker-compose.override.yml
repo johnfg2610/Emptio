@@ -11,7 +11,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=44367
-      - MongoURL=192.168.0.19
+      - MongoURL=mongodb://localhost:27017/catalog
     ports:
       - "50502:80"
       - "44367:443"
@@ -23,6 +23,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=44303
+      - MongoURL=mongodb://localhost:27017/catalog
     ports:
       - "51502:80"
       - "44303:443"

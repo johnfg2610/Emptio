@@ -25,6 +25,12 @@ namespace Catalog.API
                         config.AddEnvironmentVariables();
                         config.AddCommandLine(args);
                     })
+                .ConfigureLogging((hostingContext, config)   =>
+                {
+                    config.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    config.AddConsole();
+                    config.AddDebug();
+                })
                 .UseStartup<Startup>();
     }
 }

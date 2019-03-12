@@ -39,13 +39,13 @@ namespace Catalog.API.Database.Impl
 
         public Task UpdateAsync(Expression<Func<BrandModel, bool>> predicate, string updateJson)
         {
-            return _brandCollection.UpdateOneAsync(predicate, new JsonUpdateDefinition<BrandModel>(updateJson));
+            return _brandCollection.FindOneAndUpdateAsync(predicate, new JsonUpdateDefinition<BrandModel>(updateJson));
         }
 
         public Task UpdateAsync(Expression<Func<BrandModel, bool>> predicate, object updateObject)
         { 
 
-            return _brandCollection.UpdateOneAsync(predicate, new ObjectUpdateDefinition<BrandModel>(updateObject));
+            return _brandCollection.FindOneAndUpdateAsync(predicate, new ObjectUpdateDefinition<BrandModel>(updateObject));
         }
 
         public Task DeleteAsync(Expression<Func<BrandModel, bool>> predicate)

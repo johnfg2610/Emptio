@@ -19,6 +19,18 @@ namespace Cart.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddEnvironmentVariables();
+                    config.AddCommandLine(args);
+                })
+                .ConfigureLogging((hostingContext, config) =>
+                {
+                    config.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    config.AddConsole();
+                    config.AddDebug();
+                })
                 .UseStartup<Startup>();
     }
 }

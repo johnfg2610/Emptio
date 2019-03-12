@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Catalog.API.Database;
 using Catalog.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,86 +16,74 @@ namespace Catalog.API.Controllers
     public class ProductController : Controller
     {
         private readonly IProductDatabase productDatabase;
+        private readonly ILogger logger;
 
-        public ProductController(IProductDatabase productDatabase)
+        public ProductController(IProductDatabase productDatabase, ILogger<ProductController> logger)
         {
             this.productDatabase = productDatabase;
+            this.logger = logger;
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute]Guid id)
         {
             if (id == Guid.Empty)
-            {
                 return BadRequest();
-            }
 
-            var product = await productDatabase.GetSingleAsync(it => it.Id == id);
+            var brand = await productDatabase.GetSingleAsync(it => it.Id == id);
 
-            if (product == null)
-            {
+            if (brand == null)
                 return NotFound();
-            }
 
-            return Ok(product);
+            return Ok(brand);
         }
 
-        [HttpGet("/{id}/list")]
-        public async Task<IActionResult> GetList([FromRoute]Guid id)
+        [HttpGet("list")]
+        public async Task<IActionResult> GetListAll()
         {
-            if (id == Guid.Empty)
-            {
-                return BadRequest();
-            }
+            var brand = await productDatabase.GetListAsync(it => true);
 
-            var product = await productDatabase.GetListAsync(it => it.Id == id);
-
-            if (product == null)
-            {
+            if (brand == null)
                 return NotFound();
-            }
 
-            return Ok(product);
+            return Ok(brand);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ProductModel productModel)
         {
             if (productModel == null)
-            {
                 return BadRequest();
-            }
 
             var id = await productDatabase.CreateAsync(productModel);
 
             return Ok(id);
         }
 
-        [HttpPatch("/{id}")]
-        public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]ProductModel productModel)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]JObject body)
         {
-            if (productModel == null)
+            var json = body.ToString();
+
+            if (string.IsNullOrWhiteSpace(json))
             {
                 return BadRequest();
             }
 
-            await productDatabase.UpdateAsync(it => it.Id == id, productModel);
+            await productDatabase.UpdateAsync(it => it.Id == id, json);
 
             return Ok();
         }
-        
-        [HttpDelete("/{id}")]
+
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
-            {
                 return BadRequest();
-            }
 
             await productDatabase.DeleteAsync(it => it.Id == id);
 
             return Ok();
         }
-
     }
 }

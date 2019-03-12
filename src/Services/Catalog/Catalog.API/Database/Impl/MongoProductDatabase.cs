@@ -39,12 +39,12 @@ namespace Catalog.API.Database.Impl
 
         public Task UpdateAsync(Expression<Func<ProductModel, bool>> predicate, string updateJson)
         {
-            return _productCollection.UpdateOneAsync(predicate, new JsonUpdateDefinition<ProductModel>(updateJson));
+            return _productCollection.FindOneAndUpdateAsync(predicate, new JsonUpdateDefinition<ProductModel>(updateJson));
         }
 
         public Task UpdateAsync(Expression<Func<ProductModel, bool>> predicate, object updateObject)
         {
-            return _productCollection.UpdateOneAsync(predicate, new ObjectUpdateDefinition<ProductModel>(updateObject));
+            return _productCollection.FindOneAndUpdateAsync(predicate, new ObjectUpdateDefinition<ProductModel>(updateObject));
         }
 
         public Task DeleteAsync(Expression<Func<ProductModel, bool>> predicate)
