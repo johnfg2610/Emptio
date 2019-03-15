@@ -33,7 +33,7 @@ namespace Catalog.API
             services.AddSingleton<IdGenerator>(it => new DefaultIdGenerator());
             //todo add IMongoClient
             services.AddSingleton(it => new MongoClientSettings() {
-                Server = new MongoServerAddress("192.168.0.19", 27017)
+                Server = new MongoServerAddress(Configuration.GetValue<string>("MongoLink"), Configuration.GetValue<int>("MongoPort"))
             });
 
             services.AddSingleton<IMongoClient>(it => new MongoClient(it.GetService<MongoClientSettings>()));

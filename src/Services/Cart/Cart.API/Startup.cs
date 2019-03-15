@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
@@ -17,6 +18,12 @@ namespace Cart.API
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -25,7 +32,7 @@ namespace Cart.API
             //todo add IMongoClient
             services.AddSingleton(it => new MongoClientSettings()
             {
-                Server = new MongoServerAddress("192.168.0.19", 27017)
+                Server = new MongoServerAddress(Configuration.GetValue<string>("MongoLink"), Configuration.GetValue<int>("MongoPort"))
             });
 
             services.AddSingleton<IMongoClient>(it => new MongoClient(it.GetService<MongoClientSettings>()));
